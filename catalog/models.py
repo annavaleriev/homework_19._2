@@ -4,7 +4,7 @@ NULLABLE = {"null": True, "blank": True}
 
 
 class Category(models.Model):
-    title = models.BooleanField(max_length=100, verbose_name="наименование")
+    title = models.CharField(max_length=100, verbose_name="наименование")
     description = models.TextField(**NULLABLE, verbose_name="описание")
 
     def __str__(self):
@@ -16,7 +16,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    title = models.BooleanField(max_length=100, verbose_name="наименование")
+    title = models.CharField(max_length=100, verbose_name="наименование")
     description = models.TextField(**NULLABLE, verbose_name="описание")
     image = models.ImageField(
         upload_to="product_image/", verbose_name="Изображение (превью)", **NULLABLE
