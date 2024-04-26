@@ -81,7 +81,6 @@ DATABASES = {
         'NAME': 'catalog',
         'USER': 'postgres',
         'PASSWORD': os.getenv('DATABASE_PASSWORD')
-        # 'HOST': 'localhost',
     }
 }
 
