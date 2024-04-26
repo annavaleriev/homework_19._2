@@ -8,37 +8,95 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.BooleanField(max_length=100, verbose_name='наименование')),
-                ('description', models.TextField(blank=True, null=True, verbose_name='описание')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.BooleanField(max_length=100, verbose_name="наименование"),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, null=True, verbose_name="описание"),
+                ),
             ],
             options={
-                'verbose_name': 'категория',
-                'verbose_name_plural': 'категории',
+                "verbose_name": "категория",
+                "verbose_name_plural": "категории",
             },
         ),
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.BooleanField(max_length=100, verbose_name='наименование')),
-                ('description', models.TextField(blank=True, null=True, verbose_name='описание')),
-                ('image', models.ImageField(blank=True, null=True, upload_to='product_image/', verbose_name='Изображение (превью)')),
-                ('price', models.DecimalField(decimal_places=2, max_digits=10, verbose_name='Цена за покупку')),
-                ('created_at', models.DateField(auto_now_add=True, verbose_name='дата создания (записи в БД)')),
-                ('updated_at', models.DateField(auto_now=True, verbose_name='дата последнего изменения (записи в БД)')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='catalog.category', verbose_name='категория')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.BooleanField(max_length=100, verbose_name="наименование"),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, null=True, verbose_name="описание"),
+                ),
+                (
+                    "image",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to="product_image/",
+                        verbose_name="Изображение (превью)",
+                    ),
+                ),
+                (
+                    "price",
+                    models.DecimalField(
+                        decimal_places=2, max_digits=10, verbose_name="Цена за покупку"
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateField(
+                        auto_now_add=True, verbose_name="дата создания (записи в БД)"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateField(
+                        auto_now=True,
+                        verbose_name="дата последнего изменения (записи в БД)",
+                    ),
+                ),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="catalog.category",
+                        verbose_name="категория",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'продукт',
-                'verbose_name_plural': 'продукты',
+                "verbose_name": "продукт",
+                "verbose_name_plural": "продукты",
             },
         ),
     ]
