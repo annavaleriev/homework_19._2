@@ -36,13 +36,15 @@ class Command(BaseCommand):
         Category.objects.bulk_create(category_for_create)
 
         for products_data in Command.json_read_products():
-            products_for_create.append(
-                Product(title=products_data['title'], description=products_data['description'],
-                        image=products_data['image'], category=products_data['category'],
-                        price=products_data['price'], created_at=products_data['created_at'],
-                        updated_at=products_data['updated_at']
-                        )
-            )
+            # products_for_create.append(
+            #     Product(title=products_data['title'], description=products_data['description'],
+            #             image=products_data['image'], category=products_data['category'],
+            #             price=products_data['price'], created_at=products_data['created_at'],
+            #             updated_at=products_data['updated_at']
+            #             )
+            # )
+            product = Product(**products_data)
+            products_for_create.append(product)
 
             Product.objects.bulk_create(products_for_create)
 
