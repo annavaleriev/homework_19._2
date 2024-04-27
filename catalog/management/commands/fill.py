@@ -9,13 +9,13 @@ class Command(BaseCommand):
 
     @staticmethod
     def json_read_categories():
-        with open('categories.json', 'r') as file:
+        with open('catalog/fixtures/categories.json', 'r', encoding='utf-8') as file:
             categories_data = json.load(file)
         return categories_data
 
     @staticmethod
     def json_read_products():
-        with open('products.json', 'r') as file:
+        with open('catalog/fixtures/products.json', 'r', encoding='utf-8') as file:
             products_data = json.load(file)
         return products_data
 
@@ -28,37 +28,27 @@ class Command(BaseCommand):
         category_for_create = []
         products_for_create = []
 
-        for category_data in Command.json_read_categories():
+        for category_data in self.json_read_categories():
             category_for_create.append(
-                Category(title=category_data['title'], description=category_data['description'])
+                Category(title=category_data['fields']['title'], description=category_data['fields']['description'],
+                         id=category_data['pk'])
             )
 
         Category.objects.bulk_create(category_for_create)
 
-        for products_data in Command.json_read_products():
-            # products_for_create.append(
-            #     Product(title=products_data['title'], description=products_data['description'],
-            #             image=products_data['image'], category=products_data['category'],
-            #             price=products_data['price'], created_at=products_data['created_at'],
-            #             updated_at=products_data['updated_at']
-            #             )
-            # )
-            product = Product(**products_data)
-            products_for_create.append(product)
+        for products_data in self.json_read_products():
+            products_data_fields = products_data['fields']
+            products_for_create.append(
+                Product(
+                    id=products_data["pk"],
+                    title=products_data_fields['title'],
+                    description=products_data_fields['description'],
+                    image=products_data_fields['image'],
+                    category=Category.objects.get(pk=products_data_fields['category']),
+                    price=products_data_fields['price'],
+                    created_at=products_data_fields['created_at'],
+                    updated_at=products_data_fields['updated_at']
+                )
+            )
 
             Product.objects.bulk_create(products_for_create)
-
-            # а с id что делать? Он же есть в базе
-
-            # def handle(self, *args, **options):
-            #     category_list = [
-            #         {'title': "Продукты", 'description': "Замороженные"},
-            #         {'title': "Корм", 'description': "Для животных"},
-            #         {'title': "Бытовая химия", 'description': "Для дома"},
-            #     ]
-            #
-            #     category_for_create = []
-            #     for category_item in category_list:
-            #         category_for_create.append(
-            #             Category(**category_item)
-            #         )
