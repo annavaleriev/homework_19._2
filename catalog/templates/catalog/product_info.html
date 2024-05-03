@@ -4,11 +4,10 @@
 
 <div class="container">
     <div class="row text-center">
-    {% for product in products %}
-        <div class="col-3">
+        <div class="col-12">
         <div class="card mb-4 box-shadow">
                 <div class="card-header">
-                    <h4 class="my-0 font-weight-normal"><a href="{% url 'catalog:product_info' pk=product.id %}">{{ product.title }}</a></h4>
+                    <h4 class="my-0 font-weight-normal">{{ product.title }}</h4>
                 </div>
                 <div class="card-body">
                     <h1 class="card-title pricing-card-title">{{ product.price }}</h1>
@@ -17,7 +16,6 @@
                 </div>
             </div>
         </div>
-    {% endfor %}
     </div>
 </div>
 {% endblock %}
