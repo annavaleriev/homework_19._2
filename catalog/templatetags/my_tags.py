@@ -1,4 +1,5 @@
 from django import template
+from django.conf import settings
 
 register = template.Library() # Регистрация библиотеки тегов
 
@@ -6,7 +7,7 @@ register = template.Library() # Регистрация библиотеки те
 @register.simple_tag  # Регистрация тега
 def media(path):  # Функция тега
     if path: # Если путь существует
-        return f"/media/{path}" # Возвращаем путь к медиафайлу
+        return f"{settings.MEDIA_URL}{path}" # Возвращаем путь к медиафайлу
     return "#" # Иначе возвращаем решетку ( решётка это pass)
 
 # @register.filter() # Регистрация фильтра
