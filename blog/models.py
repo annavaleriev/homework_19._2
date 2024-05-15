@@ -3,7 +3,7 @@ from django.db import models
 NULLABLE = {"blank": True, "null": True}
 
 
-class Blog(models.Model):
+class Article(models.Model):
     title = models.CharField(max_length=150, verbose_name="Заголовок")
     slug = models.CharField(max_length=150, unique=True, verbose_name="Slug", **NULLABLE)
     body = models.TextField(verbose_name="Содержимое")
