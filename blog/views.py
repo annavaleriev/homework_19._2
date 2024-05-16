@@ -1,10 +1,11 @@
 from django.views.generic import ListView, DetailView
 
-from blog.models import Blog
+from blog.models import Article
 
 
 class BlogListView(ListView):  # создаем класс BlogListView, который наследуется от ListView
-    model = Blog  # указываем модель, с которой будет работать наш класс
+    model = Article  # указываем модель, с которой будет работать наш класс
+    template_name = "blog/contacts.html"
 
     def get_queryset(self, *args, **kwargs):  # тут мы переопределяем метод get_queryset
         queryset = super().get_queryset().order_by(*args,
@@ -14,7 +15,8 @@ class BlogListView(ListView):  # создаем класс BlogListView, кот�
 
 
 class BlogDetailView(DetailView):  # создаем класс BlogDetailView, который наследуется от DetailView
-    model = Blog
+    model = Article
+    template_name = ""
 
     def get_object(self, queryset=None):  # переопределяем метод get_object
         self.object = super().get_object(queryset)  # вызываем родительский метод get_object
