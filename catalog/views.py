@@ -16,16 +16,6 @@ class ProductListView(ListView):
         return context
 
 
-# def product_info(request, pk):
-#     """ Отображение информации о продукте """
-#     product = Product.objects.get(pk=pk) # Получение объекта из БД
-#     context = { # Контекст шаблона
-#         'title': "Описание продукта", # Заголовок страницы
-#         'product': product # Объект продукта
-#     }
-#     return render(request, 'catalog/product_info.html', context) # Вывод шаблона с контекстом
-
-
 class ContactsTemplateView(FormView):
     template_name = "catalog/contacts.html"
     form_class = ContactForm

@@ -1,13 +1,13 @@
-from django.conf import settings
-from django.conf.urls.static import static
 from django.urls import path
-from catalog.apps import CatalogConfig
-from catalog.views import ProductDetailView, ContactsTemplateView
+from blog.apps import BlogConfig
+from blog.views import ArticleListView, ArticleDetailView, ArticleCreateView, ArticleUpdateView, ArticleDeleteView
 
-app_name = CatalogConfig.name
+app_name = BlogConfig.name
 
 urlpatterns = [
-    # path("", home, name="home"),
-    # path("contacts/", ContactsTemplateView.as_view(), name="contacts_list"),
-    # path("products/<int:pk>", ProductDetailView.as_view(), name="product_info"), # Добавление URL с параметром
+    path("create/", ArticleCreateView.as_view(), name="create"), # это CreateView
+    path("", ArticleListView.as_view(), name="list"), # это ListView
+    path("view/<int:pk>", ArticleDetailView.as_view(), name="view"), # это DetailView
+    path("edit/<int:pk>", ArticleUpdateView.as_view(), name="edit"), # это UpdateView
+    path("delete/<int:pk>", ArticleDeleteView.as_view(), name="delete"), # это DeleteView
 ]
