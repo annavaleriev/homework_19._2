@@ -5,4 +5,5 @@ from blog.models import Article
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    exclude = ()
+    list_display = ("title", "body", "views")
+    readonly_fields = ("views", )

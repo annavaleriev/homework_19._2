@@ -1,36 +1,29 @@
-from django.template.defaultfilters import slugify
+from django.core.mail import send_mail
+
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from blog.models import Article
 
 
-class ArticleCreateView(CreateView): # создаем класс BlogCreateView, который наследуется от CreateView
+class ArticleViewMixin:
     model = Article
     fields = ["title", "body"] # указываем поля, которые будут в форме
-    success_url = reverse_lazy("blog:list") # указываем URL, на который будет перенаправлен пользователь после
-    # успешного создания объекта
+    template_name = "blog/article_form.html"
 
-    def form_valid(self, form): # переопределяем метод form_valid
-        if form.is_valid(): # проверяем, что форма валидна
-            new_article = form.save() # сохраняем форму
-            new_article.slug = slugify(new_article.title) # генерируем slug
-            new_article.save() # сохраняем изменения
-        return super().form_valid(form) # вызываем родительский метод form_valid
+    # def form_valid(self, form): # переопределяем метод form_valid
+    #     if form.is_valid(): # проверяем, что форма валидна
+    #         new_article = form.save() # сохраняем форму
+    #         new_article.slug = slugify(new_article.title) # генерируем slug
+    #         new_article.save() # сохраняем изменения
+    #     return super().form_valid(form) # вызываем родительский метод form_valid
 
 
-class ArticleUpdateView(UpdateView): # создаем класс BlogUpdateView, который наследуется от UpdateView
-    model = Article
-    fields = ["title", "body"]
+class ArticleCreateView(ArticleViewMixin, CreateView): # создаем класс BlogCreateView, который наследуется от CreateView
     success_url = reverse_lazy("blog:list") # указываем URL, на который будет перенаправлен пользователь после
 
-    def form_valid(self, form):
-        if form.is_valid():
-            new_article = form.save()
-            new_article.slug = slugify(new_article.title)
-            new_article.save()
-        return super().form_valid(form)
 
+class ArticleUpdateView(ArticleViewMixin, UpdateView): # создаем класс BlogUpdateView, который наследуется от UpdateView
     def get_success_url(self): # переопределяем метод get_success_url
         return reverse('blog:view', kwargs={'pk': self.get_object().pk})
         # возвращаем URL, на который будет перенаправлен
@@ -61,3 +54,4 @@ class ArticleDetailView(DetailView):  # создаем класс BlogDetailView
 class ArticleDeleteView(DeleteView):
     model = Article
     success_url = reverse_lazy("blog:list")
+    template_name = "blog/article_confirm_delete.html"
