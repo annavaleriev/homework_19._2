@@ -1,23 +1,97 @@
-{% extends  "includes/base.html" %}}
+{#{% extends  "includes/base.html" %}}#}
+{##}
+{#{% block content %}#}
+{#    <div class="col-12">#}
+{#        <div class="row">#}
+{#            <div class="col-6">#}
+{#                <div class="card">#}
+{#                    <div class="card-body">#}
+{#                        <form method="post">#}
+{#                            {% csrf_token %}#}
+{#                            {{ form.as_p }}#}
+{#                            <button type="submit" class="btn btn-success">#}
+{#                                {% if object %}#}
+{#                                    Сохранить#}
+{#                                {% else %}#}
+{#                                    Создать#}
+{#                                {% endif %}#}
+{#                            </button>#}
+{#                        </form>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}
+
+{#{% extends "includes/base.html" %}#}
+{##}
+{#{% block content %}#}
+{#    <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">#}
+{#        <div class="col-md-6">#}
+{#            <div class="card">#}
+{#                <div class="card-body">#}
+{#                    <form method="post">#}
+{#                        {% csrf_token %}#}
+{#                        {{ form.as_p }}#}
+{#                        <button type="submit" class="btn btn-success">#}
+{#                            {% if object %}#}
+{#                                Сохранить#}
+{#                            {% else %}#}
+{#                                Создать#}
+{#                            {% endif %}#}
+{#                        </button>#}
+{#                    </form>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}
+
+{#{% extends "includes/base.html" %}#}
+{##}
+{#{% block content %}#}
+{#    <div class="d-flex justify-content-center align-items-start mt-5" style="min-height: 100vh;">#}
+{#        <div class="w-100">#}
+{#            <div class="card w-100">#}
+{#                <div class="card-body">#}
+{#                    <form method="post">#}
+{#                        {% csrf_token %}#}
+{#                        {{ form.as_p }}#}
+{#                        <button type="submit" class="btn btn-success w-100">#}
+{#                            {% if object %}#}
+{#                                Сохранить#}
+{#                            {% else %}#}
+{#                                Создать#}
+{#                            {% endif %}#}
+{#                        </button>#}
+{#                    </form>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}
+
+{% extends "includes/base.html" %}
 
 {% block content %}
-    <div class="col-12">
-        <div class="row">
-            <div class="col-6">
-                <div class="card">
-                    <div class="card-body">
-                        <form method="post">
-                            {% csrf_token %}
+    <div class="d-flex justify-content-center align-items-start mt-5" style="min-height: 100vh;">
+        <div class="w-100">
+            <div class="card w-100">
+                <div class="card-body">
+                    <form method="post" class="w-100">
+                        {% csrf_token %}
+                        <div class="form-group w-100">
                             {{ form.as_p }}
-                            <button type="submit" class="btn btn-success">
-                                {% if object %}
-                                    Сохранить
-                                {% else %}
-                                    Создать
-                                {% endif %}
-                            </button>
-                        </form>
-                    </div>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 mt-3">
+                            {% if object %}
+                                Сохранить
+                            {% else %}
+                                Создать
+                            {% endif %}
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
