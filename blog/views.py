@@ -1,5 +1,7 @@
+from smtplib import SMTPException
+
+from django.conf import settings
 from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404
 
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -9,7 +11,7 @@ from blog.models import Article
 
 class ArticleViewMixin:
     model = Article
-    fields = ["title", "body"]  # указываем поля, которые будут в форме
+    fields = ["title", "body", "image"]  # указываем поля, которые будут в форме
     template_name = "blog/article_form.html"
 
     # def form_valid(self, form): # переопределяем метод form_valid
@@ -47,10 +49,22 @@ class ArticleDetailView(DetailView):  # создаем класс BlogDetailView
     model = Article
     template_name = "blog/article_detail.html"
 
+    def send_info_about_views(self):
+        subject = f"Поздравляю пост {self.object.title} набрал 100 просмотров "
+        message = f"Ты просто милашка! Твой пост {self.object.title} набрал 100 просмотров"
+        from_email = settings.EMAIL_HOST_USER
+        to_email = ["filenko.a@gmail.com"]
+        try:
+            send_mail(subject, message, from_email, to_email)
+        except SMTPException as e:
+            print(e)
+
     def get_object(self, queryset=None):  # переопределяем метод get_object
         self.object = super().get_object(queryset)  # вызываем родительский метод get_object
         self.object.views += 1  # увеличиваем количество просмотров на 1
         self.object.save()  # сохраняем изменения
+        if self.object.views > settings.COUNT_VIEWS_FOR_SEND_EMAIL:
+            self.send_info_about_views()
         return self.object  # возвращаем объект
 
 
@@ -58,16 +72,3 @@ class ArticleDeleteView(DeleteView):
     model = Article
     success_url = reverse_lazy("blog:list")
     template_name = "blog/article_confirm_delete.html"
-
-
-class ArticleSendEmail:
-
-    @staticmethod
-    def send_email(article_ip):
-        article = get_object_or_404(Article, pk=article_ip)
-        if article.views == 5:
-            subject = f"Поздравляю пост {article.title} набрал 100 просмотров "
-            message = f"Ты просто милашка! Твой пост {article.title} набрал 100 просмотров"
-            from_email = "filenko.a@gmail.com"
-            to_email = ["filenko.a@gmail.com"]
-            send_mail(subject, message, from_email, to_email)
