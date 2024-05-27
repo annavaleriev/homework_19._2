@@ -14,13 +14,6 @@ class ArticleViewMixin:
     fields = ["title", "body", "image"]  # указываем поля, которые будут в форме
     template_name = "blog/article_form.html"
 
-    # def form_valid(self, form): # переопределяем метод form_valid
-    #     if form.is_valid(): # проверяем, что форма валидна
-    #         new_article = form.save() # сохраняем форму
-    #         new_article.slug = slugify(new_article.title) # генерируем slug
-    #         new_article.save() # сохраняем изменения
-    #     return super().form_valid(form) # вызываем родительский метод form_valid
-
 
 class ArticleCreateView(ArticleViewMixin,
                         CreateView):  # создаем класс BlogCreateView, который наследуется от CreateView
