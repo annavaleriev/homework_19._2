@@ -15,6 +15,9 @@
                             <div class="btn-group">
                                 <a class="btn btn-sm btn-outline-secondary" href="{% url 'blog:edit' pk=object.id %}">Edit</a>
                                 <a class="btn btn-sm btn-outline-secondary" href="{% url 'blog:delete' pk=object.id %}">Delete</a>
+                                <div>
+                                    <small class="text-muted ml-auto">Просмотры: {{ object.views }}</small>
+                                </div>
                             </div>
                         </div>
                     </div>

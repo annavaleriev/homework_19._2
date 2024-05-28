@@ -25,6 +25,9 @@
                                        href="{% url 'blog:edit' pk=article.id %}">Edit</a>
                                     <a class="btn btn-sm btn-outline-secondary"
                                        href="{% url 'blog:delete' pk=article.id %}">Delete</a>
+                                    <div>
+                                        <small class="text-muted ml-auto">Просмотры: {{ article.views }}</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
