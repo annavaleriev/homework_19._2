@@ -1,7 +1,7 @@
-from django.urls import reverse_lazy
-from django.views.generic import DetailView, ListView, FormView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import DetailView, ListView, FormView, CreateView, UpdateView
 
-from catalog.forms import ContactForm
+from catalog.forms import ContactForm, ProductForm
 from catalog.models import Product
 
 
@@ -35,3 +35,21 @@ class ContactsTemplateView(FormView):
 class ProductDetailView(DetailView):
     model = Product
     template_name = "catalog/product_info.html"
+
+
+class ProductMixin:
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+
+
+class ProductCreateView(ProductMixin,
+                        CreateView):  # создаем класс BlogCreateView, который наследуется от CreateView
+    success_url = reverse_lazy("catalog:home")  # указываем URL, на который будет перенаправлен пользователь после
+
+
+class ProductUpdateView(ProductMixin,
+                        UpdateView):  # создаем класс BlogUpdateView, который наследуется от UpdateView
+    def get_success_url(self):  # переопределяем метод get_success_url
+        return reverse('catalog:view', kwargs={'pk': self.get_object().pk})
+        # возвращаем URL, на который будет перенаправлен
