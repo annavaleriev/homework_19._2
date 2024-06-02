@@ -5,34 +5,80 @@
 {% block content %}
 
     <div class="container">
-    <div class="col text-end">
-        <a class="btn btn-warning" href="{% url 'catalog:create' %}">Добавить продукт</a>
-    </div>
-    <div class="row text-center">
-        {% for product in object_list %}
-            <div class="col-3 my-3">
-            <div class="card mb-4 box-shadow h-100">
-            <div class="card-header">
-                <h6 class="my-0 font-weight-normal"><a
-                        href="{% url 'catalog:product_info' pk=product.id %}">{{ product.title }}</a></h6>
-            </div>
-            <div class="card-body">
-                <img class="card-img-top" src="{% media product.image %}" alt="{{ product.title }}">
-                <h6 class="card-title pricing-card-title">{{ product.price }}</h6>
-                <h6 class="card-title pricing-card-title">{{ product.description | truncatechars:100 }}</h6>
-                <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>
-                <div class="btn-group">
-                    <a class="btn btn-sm btn-outline-secondary"
-                       href="{% url 'catalog:product_info' pk=product.id %}">Подробнее о продукте</a>
-                    <a class="btn btn-sm btn-outline-secondary"
-                       href="{% url 'catalog:edit' pk=product.id %}">Редактировать карточку продукта</a>
-                    <div>
+        <div class="col text-end">
+            <a class="btn btn-warning" href="{% url 'catalog:create' %}">Добавить продукт</a>
+        </div>
+        <div class="row text-center">
+            {% for product in object_list %}
+                <div class="col-3 my-3">
+                    <div class="card mb-4 box-shadow h-100">
+                        <div class="card-header">
+                            <h6 class="my-0 font-weight-normal"><a
+                                    href="{% url 'catalog:product_info' pk=product.id %}">{{ product.title }}</a></h6>
+                        </div>
+                        <div class="card-body">
+                            <img class="card-img-top" src="{% media product.image %}" alt="{{ product.title }}">
+                            <h6 class="card-title pricing-card-title">{{ product.price }}</h6>
+                            <h6 class="card-title pricing-card-title">{{ product.description | truncatechars:100 }}</h6>
+                            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>
+                            <div class="btn-group">
+                                <a class="btn btn-sm btn-outline-secondary"
+                                   href="{% url 'catalog:product_info' pk=product.id %}">Подробнее о продукте</a>
+                                <a class="btn btn-sm btn-outline-secondary"
+                                   href="{% url 'catalog:edit' pk=product.id %}">Редактировать карточку продукта</a>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            {% for version in versions %}
+                                {% if version.product == product %}
+                                    <h6 class="card-title pricing-card-title">Версия
+                                        продукта: {{ version.version_name }}</h6>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
-        </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}
-</div>
+
+
+{#{% extends 'includes/base.html' %}#}
+{##}
+{#{% load my_tags %}#}
+{##}
+{#{% block content %}#}
+{#<div class="container">#}
+{#    <div class="row">#}
+{#        <div class="col text-end">#}
+{#            <a class="btn btn-warning" href="{% url 'catalog:create' %}">Добавить продукт</a>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="row">#}
+{#        {% for product in object_list %}#}
+{#            <div class="col-3 my-3">#}
+{#                <div class="card mb-4 box-shadow h-100">#}
+{#                    <div class="card-header">#}
+{#                        <h6 class="my-0 font-weight-normal"><a href="{% url 'catalog:product_info' pk=product.id %}">{{ product.title }}</a></h6>#}
+{#                    </div>#}
+{#                    <div class="card-body">#}
+{#                        <img class="card-img-top" src="{% media product.image %}" alt="{{ product.title }}">#}
+{#                        <h6 class="card-title pricing-card-title">{{ product.price }}</h6>#}
+{#                        <h6 class="card-title pricing-card-title">{{ product.description | truncatechars:100 }}</h6>#}
+{#                        <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>#}
+{#                        <div class="btn-group">#}
+{#                            <a class="btn btn-sm btn-outline-secondary" href="{% url 'catalog:product_info' pk=product.id %}">Подробнее о продукте</a>#}
+{#                            <a class="btn btn-sm btn-outline-secondary" href="{% url 'catalog:edit' pk=product.id %}">Редактировать карточку продукта</a>#}
+{#                        </div>#}
+{#                        {% if product.version.all %}#}
+{#                            <p><strong>Текущая версия:</strong> {{ product.version.all.0.version_name }} ({{ product.version.all.0.version_number }})</p>#}
+{#                        {% endif %}#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        {% endfor %}#}
+{#    </div>#}
+{#</div>#}
+{#{% endblock %}#}
+{#</div>#}

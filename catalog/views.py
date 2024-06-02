@@ -2,17 +2,22 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import DetailView, ListView, FormView, CreateView, UpdateView
 
 from catalog.forms import ContactForm, ProductForm
-from catalog.models import Product
+from catalog.models import Product, Version
 
 
 class ProductListView(ListView):
     model = Product
     template_name = "catalog/home.html"
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(object_list=None, **kwargs)
-        context["title"] = 'Магазинчик'
-        context["text"] = 'Отличный магазинчик'
+    def get_context_data(self, *, object_list=None, **kwargs):  # переопределяем метод get_context_data для передачи дополнительных данных в контекст
+        context = super().get_context_data(object_list=None, **kwargs)  # получаем контекст из родительского класса ListView
+        context["title"] = 'Магазинчик'  # добавляем в контекст новый ключ title со значением 'Магазинчик'
+        context["text"] = 'Отличный магазинчик'  # добавляем в контекст новый ключ text со значением 'Отличный магазинчик'
+
+        context["versions"] = Version.objects.filter(is_active=True).all()
+
+        # for product in context["object_list"]:
+        #     product.version = Version.objects.filter(is_active=True, product=product).first()
         return context
 
 
