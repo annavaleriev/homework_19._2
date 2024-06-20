@@ -56,5 +56,5 @@ class ProductCreateView(ProductMixin,
 class ProductUpdateView(ProductMixin,
                         UpdateView):  # создаем класс BlogUpdateView, который наследуется от UpdateView
     def get_success_url(self):  # переопределяем метод get_success_url
-        return reverse('catalog:view', kwargs={'pk': self.get_object().pk})
+        return reverse('catalog:product_info', kwargs={'pk': self.get_object().pk})
         # возвращаем URL, на который будет перенаправлен

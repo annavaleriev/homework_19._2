@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm, BooleanField
 
-from catalog.models import Product
+from catalog.models import Product, Version
 
 
 class StyleFormMixin:
@@ -49,3 +49,10 @@ class ProductForm(StyleFormMixin, ModelForm):  # потом вставить Sty
         description = self.cleaned_data["description"]
         self.check_wrong_words(description)
         return description
+
+
+# class VersionForm(StyleFormMixin, ModelForm):
+#     "Класс формы для создания и редактирования версии"
+#     class Meta:
+#         model = Version
+#         fields = '__all__'
