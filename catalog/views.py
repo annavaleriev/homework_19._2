@@ -7,6 +7,7 @@ from catalog.models import Product, Version
 
 
 class ProductListView(ListView):
+    """Список продуктов"""
     model = Product
     template_name = "catalog/home.html"
 
@@ -23,11 +24,12 @@ class ProductListView(ListView):
         # for product in context["object_list"]:
         #     product.version = Version.objects.filter(is_active=True, product=product).first()
         # return context
-        for product in context["object_list"]:
+        for product in context["object_list"]: # перебираем все объекты из контекста
             # product.versions = Version.objects.filter(product=product).order_by('version_number')
             product.all_versions = Version.objects.filter(product=product).order_by('version_number')
+            # добавляем в объект продукта все версии
 
-        return context
+        return context # возвращаем контекст
 
 
 class ContactsTemplateView(FormView):
@@ -36,14 +38,16 @@ class ContactsTemplateView(FormView):
     success_url = reverse_lazy('catalog:home')
 
     def form_valid(self, form):
-        if form.is_valid():
-            print(form.cleaned_data)
-        return super().form_valid(form)
+        """Отправка формы"""
+        if form.is_valid(): # проверяем валидность формы
+            print(form.cleaned_data) # выводим в консоль данные формы
+        return super().form_valid(form) # вызываем метод form_valid родительского класса
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(object_list=None, **kwargs)
-        context["title"] = 'Контакты'
-        return context
+        """Добавляем заголовок на страницу контактов"""
+        context = super().get_context_data(object_list=None, **kwargs) # получаем контекст из родительского класса
+        context["title"] = 'Контакты' # добавляем в контекст новый ключ title со значением 'Контакты'
+        return context # возвращаем контекст
 
 
 class ProductDetailView(DetailView):
@@ -53,7 +57,7 @@ class ProductDetailView(DetailView):
 
 class ProductMixin:
     model = Product
-    form_class = ProductForm
+    form_class = ProductForm # указываем форму, которая будет использоваться
     template_name = "catalog/product_form.html"
 
 
@@ -75,11 +79,11 @@ class VersionListView(ListView):
 
 class VersionCreateView(CreateView):
     model = Version
-    form_class = VersionForm
+    form_class = VersionForm # указываем форму, которая будет использоваться
     success_url = reverse_lazy("catalog:home")
 
 
 class VersionUpdateView(UpdateView):
     model = Version
-    form_class = VersionForm
+    form_class = VersionForm # указываем форму, которая будет использоваться
     success_url = reverse_lazy("catalog:home")

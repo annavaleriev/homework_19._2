@@ -5,24 +5,26 @@ from catalog.models import Product, Version
 
 
 class StyleFormMixin:
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            if isinstance(field, BooleanField):
-                field.widget.attrs["class"] = "form-check-input"
+    """Класс для добавления стилей к формам"""
+
+    def __init__(self, *args, **kwargs):  # переопределяем метод __init__
+        super().__init__(*args, **kwargs)  # вызываем родительский метод __init__
+        for field_name, field in self.fields.items():  # перебираем все поля формы
+            if isinstance(field, BooleanField):  # если поле является BooleanField
+                field.widget.attrs["class"] = "form-check-input"  # добавляем класс form-check-input
             else:
-                field.widget.attrs["class"] = "form-control"
+                field.widget.attrs["class"] = "form-control"  # добавляем класс form-control
 
 
 class ContactForm(StyleFormMixin, forms.Form):
-    "Класс формы для обратной связи"
-    name = forms.CharField()
-    phone = forms.CharField()
-    message = forms.CharField()
+    """Класс формы для обратной связи"""
+    name = forms.CharField()  # добавляем поле name
+    phone = forms.CharField()  # добавляем поле phone
+    message = forms.CharField()  # добавляем поле message
 
 
 class ProductForm(StyleFormMixin, ModelForm):  # потом вставить StyleFormMixin
-    "Класс формы для создания и редактирования продукта"
+    """Форма для создания и редактирования продукта"""
 
     class Meta:
         model = Product
@@ -33,9 +35,10 @@ class ProductForm(StyleFormMixin, ModelForm):  # потом вставить Sty
 
     @staticmethod
     def check_wrong_words(field_value):
+        """Метод проверяет наличие запрещенных слов в поле"""
         stop_words = ["казино", "криптовалюта", "крипта", "биржа", "дешево", "бесплатно", "обман", "полиция", "радар"]
         for word in stop_words:
-            if word in field_value.lower():
+            if word in field_value.lower():  # если слово из списка stop_words есть в поле
                 raise forms.ValidationError(f"Использовать '{word}' запрещено")
 
     def clean_title(self):
@@ -52,7 +55,7 @@ class ProductForm(StyleFormMixin, ModelForm):  # потом вставить Sty
 
 
 class VersionForm(StyleFormMixin, ModelForm):
-    "Класс формы для создания и редактирования версии"
+    """ Форма для создания и редактирования версии продукта"""
 
     class Meta:
         model = Version
@@ -60,3 +63,4 @@ class VersionForm(StyleFormMixin, ModelForm):
 
 
 VersionFormSet = forms.inlineformset_factory(Product, Version, form=VersionForm, extra=1)
+# создаем формсет для того, чтобы  можно было добавлять несколько версий продукта
