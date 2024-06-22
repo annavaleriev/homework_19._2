@@ -24,7 +24,8 @@ class ProductListView(ListView):
         #     product.version = Version.objects.filter(is_active=True, product=product).first()
         # return context
         for product in context["object_list"]:
-            product.versions = Version.objects.filter(product=product).order_by('version_number')
+            # product.versions = Version.objects.filter(product=product).order_by('version_number')
+            product.all_versions = Version.objects.filter(product=product).order_by('version_number')
 
         return context
 
