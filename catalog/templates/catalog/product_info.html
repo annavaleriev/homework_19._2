@@ -1,21 +1,45 @@
-{% extends 'includes/base.html' %}
+{#{% extends 'includes/base.html' %}#}
+{##}
+{#{% block content %}#}
+{##}
+{#<div class="container">#}
+{#    <div class="row text-center">#}
+{#        <div class="col-12">#}
+{#        <div class="card mb-4 box-shadow">#}
+{#                <div class="card-header">#}
+{#                    <h4 class="my-0 font-weight-normal">{{ product.title }}</h4>#}
+{#                </div>#}
+{#                <div class="card-body">#}
+{#                    <h1 class="card-title pricing-card-title">{{ product.price }}</h1>#}
+{#                    <h4 class="card-title pricing-card-title">{{ product.description }}</h4>#}
+{#                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{#{% endblock %}#}
+
+
+{% extends "includes/base.html" %}
 
 {% block content %}
-
-<div class="container">
-    <div class="row text-center">
-        <div class="col-12">
-        <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">{{ product.title }}</h4>
-                </div>
-                <div class="card-body">
-                    <h1 class="card-title pricing-card-title">{{ product.price }}</h1>
-                    <h4 class="card-title pricing-card-title">{{ product.description }}</h4>
-                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <p>Имя продукта: {{ product.title }}</p>
+                        <p>Текущая активная версия: {{ product.current_version.version_number }}</p>
+                        <h1 class="card-title pricing-card-title">{{ product.price }}</h1>
+                        <h4 class="card-title pricing-card-title">{{ product.description }}</h4>
+                        <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>
+                        <a href="{% url 'catalog:create_version' %}" class="btn btn-lg btn-block btn-outline-primary">Создание версии</a>
+                        <a href="{% url 'catalog:list_version' %}" class="btn btn-lg btn-block btn-outline-primary">Посмотреть все версии</a>
+                        <a href="{% url 'catalog:edit' product.id %}" class="btn btn-primary">Редактировать продукт</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

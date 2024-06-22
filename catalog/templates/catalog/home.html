@@ -29,12 +29,10 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            {% for version in versions %}
-                                {% if version.product == product %}
+                                {% if product.current_version %}
                                     <h6 class="card-title pricing-card-title">Версия
-                                        продукта: {{ version.version_name }}</h6>
+                                        продукта: {{ product.current_version.version_name }}</h6>
                                 {% endif %}
-                            {% endfor %}
                         </div>
                     </div>
                 </div>

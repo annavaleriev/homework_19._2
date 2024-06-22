@@ -1,7 +1,8 @@
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import DetailView, ListView, FormView, CreateView, UpdateView
 
-from catalog.forms import ContactForm, ProductForm
+from catalog.forms import ContactForm, ProductForm, VersionFormSet, VersionForm
 from catalog.models import Product, Version
 
 
@@ -9,15 +10,22 @@ class ProductListView(ListView):
     model = Product
     template_name = "catalog/home.html"
 
-    def get_context_data(self, *, object_list=None, **kwargs):  # переопределяем метод get_context_data для передачи дополнительных данных в контекст
-        context = super().get_context_data(object_list=None, **kwargs)  # получаем контекст из родительского класса ListView
+    def get_context_data(self, *, object_list=None,
+                         **kwargs):  # переопределяем метод get_context_data для передачи дополнительных данных в контекст
+        context = super().get_context_data(object_list=None,
+                                           **kwargs)  # получаем контекст из родительского класса ListView
         context["title"] = 'Магазинчик'  # добавляем в контекст новый ключ title со значением 'Магазинчик'
-        context["text"] = 'Отличный магазинчик'  # добавляем в контекст новый ключ text со значением 'Отличный магазинчик'
+        context[
+            "text"] = 'Отличный магазинчик'  # добавляем в контекст новый ключ text со значением 'Отличный магазинчик'
 
-        context["versions"] = Version.objects.filter(is_active=True).all()
+        # context["versions"] = Version.objects.filter(is_active=True).all()
 
         # for product in context["object_list"]:
         #     product.version = Version.objects.filter(is_active=True, product=product).first()
+        # return context
+        for product in context["object_list"]:
+            product.versions = Version.objects.filter(product=product).order_by('version_number')
+
         return context
 
 
@@ -58,3 +66,19 @@ class ProductUpdateView(ProductMixin,
     def get_success_url(self):  # переопределяем метод get_success_url
         return reverse('catalog:product_info', kwargs={'pk': self.get_object().pk})
         # возвращаем URL, на который будет перенаправлен
+
+
+class VersionListView(ListView):
+    model = Version
+
+
+class VersionCreateView(CreateView):
+    model = Version
+    form_class = VersionForm
+    success_url = reverse_lazy("catalog:home")
+
+
+class VersionUpdateView(UpdateView):
+    model = Version
+    form_class = VersionForm
+    success_url = reverse_lazy("catalog:home")

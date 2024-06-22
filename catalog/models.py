@@ -43,6 +43,10 @@ class Product(models.Model):
         verbose_name = "Продукт"
         verbose_name_plural = "Продукты"
 
+    @property
+    def current_version(self):
+        return self.versions.all().filter(is_active=True).first()
+
 
 class Version(models.Model):
     product = models.ForeignKey(Product, related_name='versions', on_delete=models.CASCADE,

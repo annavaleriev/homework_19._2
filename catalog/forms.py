@@ -51,8 +51,12 @@ class ProductForm(StyleFormMixin, ModelForm):  # потом вставить Sty
         return description
 
 
-# class VersionForm(StyleFormMixin, ModelForm):
-#     "Класс формы для создания и редактирования версии"
-#     class Meta:
-#         model = Version
-#         fields = '__all__'
+class VersionForm(StyleFormMixin, ModelForm):
+    "Класс формы для создания и редактирования версии"
+
+    class Meta:
+        model = Version
+        fields = ["version_number", "is_active", "product"]
+
+
+VersionFormSet = forms.inlineformset_factory(Product, Version, form=VersionForm, extra=1)
