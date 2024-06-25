@@ -76,6 +76,9 @@
                                 {{ form.as_p }}
                             </div>
                             <div class="form-group">
+                                {% for message in messages %}
+                                     {{ message }}
+                                {% endfor %}
                                 {{ formset.management_form }}
                                 {% for version_form in formset %}
                                     <div class="form-row">

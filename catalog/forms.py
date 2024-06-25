@@ -59,8 +59,8 @@ class VersionForm(StyleFormMixin, ModelForm):
 
     class Meta:
         model = Version
-        fields = ["version_number", "is_active", "product"]
+        fields = ["version_name", "version_number", "is_active", "product"]
 
 
-VersionFormSet = forms.inlineformset_factory(Product, Version, form=VersionForm, extra=1)
+# VersionFormSet = forms.inlineformset_factory(Product, Version, form=VersionForm, extra=1)
 # создаем формсет для того, чтобы  можно было добавлять несколько версий продукта

@@ -10,7 +10,4 @@ urlpatterns = [
     path("products/<int:pk>/", views.ProductDetailView.as_view(), name="product_info"),
     path("create/", views.ProductCreateView.as_view(), name="create"),  # это CreateView
     path("edit/<int:pk>/", views.ProductUpdateView.as_view(), name="edit"),   # это UpdateView
-    path("version/create/", views.VersionCreateView.as_view(), name="create_version"),
-    path("version/list/", views.VersionListView.as_view(), name="list_version"),
-    path("version/edit/", views.VersionUpdateView.as_view(), name="update_version")   # это UpdateView#
 ]

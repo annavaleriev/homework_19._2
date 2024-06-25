@@ -59,5 +59,6 @@ class Version(models.Model):
         return f"{self.product} {self.version_number} {self.version_name}"
 
     class Meta:
+        unique_together = ["product", "version_number"]
         verbose_name = "Версия"
         verbose_name_plural = "Версии"
