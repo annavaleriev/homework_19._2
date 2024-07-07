@@ -29,9 +29,7 @@ class Migration(migrations.Migration):
                 ("password", models.CharField(max_length=128, verbose_name="password")),
                 (
                     "last_login",
-                    models.DateTimeField(
-                        blank=True, null=True, verbose_name="last login"
-                    ),
+                    models.DateTimeField(blank=True, null=True, verbose_name="last login"),
                 ),
                 (
                     "is_superuser",
@@ -43,15 +41,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "first_name",
-                    models.CharField(
-                        blank=True, max_length=150, verbose_name="first name"
-                    ),
+                    models.CharField(blank=True, max_length=150, verbose_name="first name"),
                 ),
                 (
                     "last_name",
-                    models.CharField(
-                        blank=True, max_length=150, verbose_name="last name"
-                    ),
+                    models.CharField(blank=True, max_length=150, verbose_name="last name"),
                 ),
                 (
                     "is_staff",
@@ -71,33 +65,23 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "date_joined",
-                    models.DateTimeField(
-                        default=django.utils.timezone.now, verbose_name="date joined"
-                    ),
+                    models.DateTimeField(default=django.utils.timezone.now, verbose_name="date joined"),
                 ),
                 (
                     "email",
-                    models.EmailField(
-                        max_length=254, unique=True, verbose_name="Почта"
-                    ),
+                    models.EmailField(max_length=254, unique=True, verbose_name="Почта"),
                 ),
                 (
                     "phone",
-                    models.CharField(
-                        blank=True, max_length=150, null=True, verbose_name="Телефон"
-                    ),
+                    models.CharField(blank=True, max_length=150, null=True, verbose_name="Телефон"),
                 ),
                 (
                     "avatar",
-                    models.ImageField(
-                        blank=True, null=True, upload_to="user/", verbose_name="Аватар"
-                    ),
+                    models.ImageField(blank=True, null=True, upload_to="user/", verbose_name="Аватар"),
                 ),
                 (
                     "country",
-                    models.CharField(
-                        blank=True, max_length=150, null=True, verbose_name="Страна"
-                    ),
+                    models.CharField(blank=True, max_length=150, null=True, verbose_name="Страна"),
                 ),
                 (
                     "groups",

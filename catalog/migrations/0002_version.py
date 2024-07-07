@@ -38,9 +38,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "is_active",
-                    models.BooleanField(
-                        default=False, verbose_name="Признак текущей версии"
-                    ),
+                    models.BooleanField(default=False, verbose_name="Признак текущей версии"),
                 ),
                 (
                     "product",

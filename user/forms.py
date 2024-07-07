@@ -7,4 +7,4 @@ from user.models import User
 class RegisterForm(StyleFormMixin, BaseUserCreationForm):
     class Meta:
         model = User
-        fields = ("email", )
+        fields = ("email",)

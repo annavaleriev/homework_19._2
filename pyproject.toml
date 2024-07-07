@@ -12,7 +12,24 @@ psycopg2-binary = "2.9.9"
 python-dotenv = "1.0.1"
 Pillow = "10.3.0"
 django = "4.2.2"
+isort = "^5.13.2"
+flake8 = "^7.1.0"
 
+
+[tool.black]
+line-length = 119
+exclude = '''
+(
+  /(       # Исключить несколько общих каталогов
+    | \.git          # в корне проекта
+    | \.mypy_cache
+    | \.venv
+  )/
+)
+'''
+
+[tool.isort]
+line_length = 119
 
 [build-system]
 requires = ["poetry-core"]

@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ModelForm, BooleanField
+from django.forms import BooleanField, ModelForm
 
 from catalog.models import Product, Version
 
@@ -18,6 +18,7 @@ class StyleFormMixin:
 
 class ContactForm(StyleFormMixin, forms.Form):
     """Класс формы для обратной связи"""
+
     name = forms.CharField()  # добавляем поле name
     phone = forms.CharField()  # добавляем поле phone
     message = forms.CharField()  # добавляем поле message
@@ -55,7 +56,7 @@ class ProductForm(StyleFormMixin, ModelForm):  # потом вставить Sty
 
 
 class VersionForm(StyleFormMixin, ModelForm):
-    """ Форма для создания и редактирования версии продукта"""
+    """Форма для создания и редактирования версии продукта"""
 
     class Meta:
         model = Version

@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
+
+from django.urls import reverse
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -59,9 +61,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [
-            BASE_DIR / "templates"
-        ],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -121,9 +121,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
-STATICFILES_DIRS = [
-    BASE_DIR / "static"
-]
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -133,17 +131,20 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.yandex.ru"
 EMAIL_PORT = 465
 
 EMAIL_HOST_USER = os.getenv("EMAIL_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
 EMAIL_USE_SSL = True
 
-COUNT_VIEWS_FOR_SEND_EMAIL = 100
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+COUNT_VIEWS_FOR_SEND_EMAIL = 5
 
 AUTH_USER_MODEL = "user.User"
 
-LOGIN_REDIRECT_URL = '/' # редирект после успешного входа на главную страницу
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = "/"  # редирект после успешного входа на главную страницу
+LOGOUT_REDIRECT_URL = "/"
