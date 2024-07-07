@@ -14,14 +14,17 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf import settings
-from django.conf.urls.static import static
-from django.contrib import admin
+from django.contrib.auth.views import LoginView
 from django.urls import path, include
 
+from user.apps import UserConfig
+
+app_name = UserConfig.name
+
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", include("catalog.urls", namespace="catalog")),
-    path("user/", include("user.urls", namespace="user")),
-    path("blog/", include("blog.urls", namespace="blog")),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # Добавление маршрута для обслуживания медиафайлов
+    path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
+    # path('logout/', include('user.urls', namespace='logout')),
+    # path('register/', include('user.urls', namespace='register')),
+    # path('logout/', LogoutView.as_view(), name='logout'),
+    # path('register/', RegisterView.as_view(), name='register')
+]

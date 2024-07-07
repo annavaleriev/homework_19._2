@@ -144,3 +144,6 @@ EMAIL_USE_SSL = True
 COUNT_VIEWS_FOR_SEND_EMAIL = 100
 
 AUTH_USER_MODEL = "user.User"
+
+LOGIN_REDIRECT_URL = '/' # редирект после успешного входа на главную страницу
+LOGOUT_REDIRECT_URL = '/'
