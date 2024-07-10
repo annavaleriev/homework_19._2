@@ -149,4 +149,4 @@ AUTH_USER_MODEL = "user.User"
 LOGIN_REDIRECT_URL = "/"  # редирект после успешного входа на главную страницу
 LOGOUT_REDIRECT_URL = "/"
 
-LOGIN_URL = '/user/login/'
+LOGIN_URL = "/user/login/"

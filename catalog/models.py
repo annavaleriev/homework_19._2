@@ -5,8 +5,6 @@ from catalog.utils import NULLABLE
 from user.models import User
 
 
-
-
 class Category(models.Model):
     title = models.CharField(max_length=100, verbose_name="Наименование")
     description = models.TextField(**NULLABLE, verbose_name="Описание")

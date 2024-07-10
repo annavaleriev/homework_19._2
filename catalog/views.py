@@ -81,11 +81,9 @@ class ProductMixin:
     def form_valid(self, form):
         context_data = self.get_context_data()
         formset = context_data["formset"]
+
         with transaction.atomic():
             if form.is_valid() and formset.is_valid():
-                # self.object = form.save()
-                # formset.instance = self.object
-                # formset.save()
                 self.object = form.save(commit=False)
                 self.object.owner = self.request.user  # Привязка продукта к авторизованному пользователю
                 self.object.save()
@@ -94,21 +92,51 @@ class ProductMixin:
         if formset.total_error_count():
             for error in formset.errors:
                 messages.add_message(self.request, messages.ERROR, str(error))
-            if self.object:
-                # self.object.user = self.request.user
-                success_url = reverse("catalog:edit", kwargs={"pk": self.object.pk})
-            else:
-                success_url = reverse("catalog:create")
-            return HttpResponseRedirect(success_url)
+        if self.object:
+            success_url = reverse("catalog:edit", kwargs={"pk": self.object.pk})
+        else:
+            success_url = reverse("catalog:create")
+        return HttpResponseRedirect(success_url)
 
         return super().form_valid(form)
 
+    # def form_valid(self, form):
+    #     self.object = form.save(commit=False)
+    #     self.object.owner = self.request.user  # Привязка продукта к текущему пользователю
+    #     formset = self.get_context_data()["formset"]
+    #
+    #     with transaction.atomic():
+    #         if formset.is_valid():
+    #             self.object.save()
+    #             formset.instance = self.object
+    #             formset.save()
+    #         else:
+    #             for error in formset.errors:
+    #                 messages.add_message(self.request, messages.ERROR, str(error))
+    #             return HttpResponseRedirect(reverse('catalog:create'))
+    #
+    #     return super().form_valid(form)
+    #
+    # def form_invalid(self, form):
+    #     messages.error(self.request, 'Произошла ошибка при заполнении формы.')
+    #     return super().form_invalid(form)
+    #
+    # def dispatch(self, request, *args, **kwargs):
+    #     if not self.request.user.is_authenticated:
+    #         messages.info(self.request, 'Для добавления продукта необходимо авторизоваться.')
+    #         return HttpResponseRedirect(reverse('login'))
+    #     return super().dispatch(request, *args, **kwargs)
 
-class ProductCreateView(LoginRequiredMixin, ProductMixin, CreateView):  # создаем класс BlogCreateView, который наследуется от CreateView
+
+class ProductCreateView(
+    LoginRequiredMixin, ProductMixin, CreateView
+):  # создаем класс BlogCreateView, который наследуется от CreateView
     success_url = reverse_lazy("catalog:home")  # указываем URL, на который будет перенаправлен пользователь после
 
 
-class ProductUpdateView(LoginRequiredMixin, ProductMixin, UpdateView):  # создаем класс BlogUpdateView, который наследуется от UpdateView
+class ProductUpdateView(
+    LoginRequiredMixin, ProductMixin, UpdateView
+):  # создаем класс BlogUpdateView, который наследуется от UpdateView
     def get_success_url(self):  # переопределяем метод get_success_url
         return reverse("catalog:product_info", kwargs={"pk": self.get_object().pk})
         # возвращаем URL, на который будет перенаправлен
