@@ -25,13 +25,6 @@ class ArticleCreateView(
     login_url = reverse_lazy("user:login")
     success_url = reverse_lazy("blog:list")  # указываем URL, на который будет перенаправлен пользователь после
 
-    # def form_valid(self, form):
-    #     print()
-    #     self.object = form.save(commit=False)
-    #     self.object.slug = self.object.title
-    #     form.instance.slug = form.instance.title
-    #     return super().form_valid(form)
-
 
 class ArticleUpdateView(
     ArticleViewMixin, UpdateView

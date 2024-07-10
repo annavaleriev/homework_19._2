@@ -26,12 +26,6 @@ class ProductListView(ListView):
         context["text"] = (
             "Отличный магазинчик"  # добавляем в контекст новый ключ text со значением 'Отличный магазинчик'
         )
-
-        # context["versions"] = Version.objects.filter(is_active=True).all()
-
-        # for product in context["object_list"]:
-        #     product.version = Version.objects.filter(is_active=True, product=product).first()
-        # return context
         for product in context["object_list"]:  # перебираем все объекты из контекста
             # product.versions = Version.objects.filter(product=product).order_by('version_number')
             product.all_versions = Version.objects.filter(product=product).order_by("version_number")
@@ -89,70 +83,32 @@ class ProductMixin:
                 self.object.save()
                 formset.instance = self.object
                 formset.save()
-        if formset.total_error_count():
-            for error in formset.errors:
-                messages.add_message(self.request, messages.ERROR, str(error))
-        if self.object:
-            success_url = reverse("catalog:edit", kwargs={"pk": self.object.pk})
-        else:
-            success_url = reverse("catalog:create")
-        return HttpResponseRedirect(success_url)
+            else:
+                for error in formset.errors:
+                    messages.add_message(self.request, messages.ERROR, str(error))
+                if self.object:
+                    success_url = reverse("catalog:edit", kwargs={"pk": self.object.pk})
+                else:
+                    success_url = reverse("catalog:create")
+                return HttpResponseRedirect(success_url)
 
         return super().form_valid(form)
 
-    # def form_valid(self, form):
-    #     self.object = form.save(commit=False)
-    #     self.object.owner = self.request.user  # Привязка продукта к текущему пользователю
-    #     formset = self.get_context_data()["formset"]
-    #
-    #     with transaction.atomic():
-    #         if formset.is_valid():
-    #             self.object.save()
-    #             formset.instance = self.object
-    #             formset.save()
-    #         else:
-    #             for error in formset.errors:
-    #                 messages.add_message(self.request, messages.ERROR, str(error))
-    #             return HttpResponseRedirect(reverse('catalog:create'))
-    #
-    #     return super().form_valid(form)
-    #
-    # def form_invalid(self, form):
-    #     messages.error(self.request, 'Произошла ошибка при заполнении формы.')
-    #     return super().form_invalid(form)
-    #
-    # def dispatch(self, request, *args, **kwargs):
-    #     if not self.request.user.is_authenticated:
-    #         messages.info(self.request, 'Для добавления продукта необходимо авторизоваться.')
-    #         return HttpResponseRedirect(reverse('login'))
-    #     return super().dispatch(request, *args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.info(request, "Для добавления продукта необходимо авторизоваться.")
+        return super().dispatch(request, *args, **kwargs)
 
 
 class ProductCreateView(
-    LoginRequiredMixin, ProductMixin, CreateView
+    ProductMixin, LoginRequiredMixin, CreateView
 ):  # создаем класс BlogCreateView, который наследуется от CreateView
     success_url = reverse_lazy("catalog:home")  # указываем URL, на который будет перенаправлен пользователь после
 
 
 class ProductUpdateView(
-    LoginRequiredMixin, ProductMixin, UpdateView
+    ProductMixin, LoginRequiredMixin, UpdateView
 ):  # создаем класс BlogUpdateView, который наследуется от UpdateView
     def get_success_url(self):  # переопределяем метод get_success_url
         return reverse("catalog:product_info", kwargs={"pk": self.get_object().pk})
         # возвращаем URL, на который будет перенаправлен
-
-
-# class VersionListView(ListView):
-#     model = Version
-#
-#
-# class VersionCreateView(CreateView):
-#     model = Version
-#     form_class = VersionForm # указываем форму, которая будет использоваться
-#     success_url = reverse_lazy("catalog:home")
-#
-#
-# class VersionUpdateView(UpdateView):
-#     model = Version
-#     form_class = VersionForm # указываем форму, которая будет использоваться
-#     success_url = reverse_lazy("catalog:home")

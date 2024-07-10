@@ -1,15 +1,17 @@
 import random
 import secrets
 
+from django.contrib import messages
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
+from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, FormView
+from django.views.generic import CreateView, FormView, UpdateView
 
 from config.settings import EMAIL_HOST_USER
-from user.forms import RegisterForm
+from user.forms import ChangeUserForm, RegisterForm
 from user.models import User
 
 
@@ -32,6 +34,7 @@ class UserCreateView(CreateView):
             from_email=EMAIL_HOST_USER,
             recipient_list=[user.email],
         )
+        messages.info(self.request, message="Для авторизации подтвердите почту и потом залогиньтесь")
         return super().form_valid(form)
 
 
@@ -69,3 +72,16 @@ class PasswordResetView(FormView):
         )
 
         return super().form_valid(form)
+
+
+class UserChangeView(UpdateView):
+    model = User
+    form_class = ChangeUserForm
+    success_url = reverse_lazy("catalog:home")
+    template_name = "user/change.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_authenticated and user.pk == kwargs.get("pk"):
+            return super().dispatch(request, *args, **kwargs)
+        return HttpResponseForbidden()
