@@ -16,11 +16,13 @@ from user.models import User
 
 
 class UserCreateView(CreateView):
+    """Регистрация пользователя"""
     model = User
     form_class = RegisterForm
     success_url = reverse_lazy("user:login")
 
     def form_valid(self, form):
+        """Отправка письма с подтверждением почты"""
         user = form.save()
         user.is_active = False
         token = secrets.token_hex(16)
@@ -39,6 +41,7 @@ class UserCreateView(CreateView):
 
 
 def email_verification(request, token):
+    """Подтверждение почты"""
     user = get_object_or_404(User, token=token)
     user.is_active = True
     user.save()
@@ -46,11 +49,13 @@ def email_verification(request, token):
 
 
 class PasswordResetView(FormView):
+    """Восстановление пароля"""
     form_class = PasswordResetForm
     template_name = "user/password_reset.html"  # нет еще этого шаблона
     success_url = reverse_lazy("user:login")
 
     def form_valid(self, form):
+        """Отправка письма с новым паролем"""
         email = form.cleaned_data["email"]
 
         try:
@@ -75,12 +80,14 @@ class PasswordResetView(FormView):
 
 
 class UserChangeView(UpdateView):
+    """Изменение данных пользователя"""
     model = User
     form_class = ChangeUserForm
     success_url = reverse_lazy("catalog:home")
     template_name = "user/change.html"
 
     def dispatch(self, request, *args, **kwargs):
+        """Проверка на авторизацию"""
         user = request.user
         if user.is_authenticated and user.pk == kwargs.get("pk"):
             return super().dispatch(request, *args, **kwargs)

@@ -35,6 +35,7 @@ class ProductListView(ListView):
 
 
 class ContactsTemplateView(FormView):
+    """ Класс для отображения страницы контактов и отправки формы"""
     template_name = "catalog/contacts.html"
     form_class = ContactForm
     success_url = reverse_lazy("catalog:home")
@@ -53,11 +54,13 @@ class ContactsTemplateView(FormView):
 
 
 class ProductDetailView(DetailView):
+    """Информация о продукте"""
     model = Product
     template_name = "catalog/product_info.html"
 
 
 class ProductMixin:
+    """ Класс для добавления версий продукта"""
     model = Product
     form_class = ProductForm  # указываем форму, которая будет использоваться
     template_name = "catalog/product_form.html"
@@ -103,12 +106,14 @@ class ProductMixin:
 class ProductCreateView(
     ProductMixin, LoginRequiredMixin, CreateView
 ):  # создаем класс BlogCreateView, который наследуется от CreateView
+    """ Класс для создания нового продукта"""
     success_url = reverse_lazy("catalog:home")  # указываем URL, на который будет перенаправлен пользователь после
 
 
 class ProductUpdateView(
     ProductMixin, LoginRequiredMixin, UpdateView
 ):  # создаем класс BlogUpdateView, который наследуется от UpdateView
+    """ Класс для изменения продукта"""
     def get_success_url(self):  # переопределяем метод get_success_url
         return reverse("catalog:product_info", kwargs={"pk": self.get_object().pk})
         # возвращаем URL, на который будет перенаправлен
