@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
@@ -82,7 +83,12 @@ class ProductMixin:
         formset = context_data["formset"]
         with transaction.atomic():
             if form.is_valid() and formset.is_valid():
-                self.object = form.save()
+                # self.object = form.save()
+                # formset.instance = self.object
+                # formset.save()
+                self.object = form.save(commit=False)
+                self.object.owner = self.request.user  # Привязка продукта к авторизованному пользователю
+                self.object.save()
                 formset.instance = self.object
                 formset.save()
         if formset.total_error_count():
@@ -98,11 +104,11 @@ class ProductMixin:
         return super().form_valid(form)
 
 
-class ProductCreateView(ProductMixin, CreateView):  # создаем класс BlogCreateView, который наследуется от CreateView
+class ProductCreateView(LoginRequiredMixin, ProductMixin, CreateView):  # создаем класс BlogCreateView, который наследуется от CreateView
     success_url = reverse_lazy("catalog:home")  # указываем URL, на который будет перенаправлен пользователь после
 
 
-class ProductUpdateView(ProductMixin, UpdateView):  # создаем класс BlogUpdateView, который наследуется от UpdateView
+class ProductUpdateView(LoginRequiredMixin, ProductMixin, UpdateView):  # создаем класс BlogUpdateView, который наследуется от UpdateView
     def get_success_url(self):  # переопределяем метод get_success_url
         return reverse("catalog:product_info", kwargs={"pk": self.get_object().pk})
         # возвращаем URL, на который будет перенаправлен
