@@ -1,10 +1,10 @@
 from django import forms
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
+from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView, DeleteView
 
 from catalog.forms import ContactForm, ProductForm, VersionForm
 from catalog.models import Product, Version
@@ -17,7 +17,7 @@ class ProductListView(ListView):
     template_name = "catalog/home.html"
 
     def get_context_data(
-        self, *, object_list=None, **kwargs
+            self, *, object_list=None, **kwargs
     ):  # переопределяем метод get_context_data для передачи дополнительных данных в контекст
         context = super().get_context_data(
             object_list=None, **kwargs
@@ -104,16 +104,28 @@ class ProductMixin:
 
 
 class ProductCreateView(
-    ProductMixin, LoginRequiredMixin, CreateView
+    ProductMixin, LoginRequiredMixin, PermissionRequiredMixin, CreateView
 ):  # создаем класс BlogCreateView, который наследуется от CreateView
     """ Класс для создания нового продукта"""
+    permission_required = "catalog.add_product"
     success_url = reverse_lazy("catalog:home")  # указываем URL, на который будет перенаправлен пользователь после
 
 
 class ProductUpdateView(
-    ProductMixin, LoginRequiredMixin, UpdateView
+    ProductMixin, LoginRequiredMixin, PermissionRequiredMixin, UpdateView
 ):  # создаем класс BlogUpdateView, который наследуется от UpdateView
     """ Класс для изменения продукта"""
+    permission_required = "catalog.change_product"
+
     def get_success_url(self):  # переопределяем метод get_success_url
         return reverse("catalog:product_info", kwargs={"pk": self.get_object().pk})
         # возвращаем URL, на который будет перенаправлен
+
+
+class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    """"""
+
+    model = Product
+    permission_required = "catalog.delete_product"
+    success_url = reverse_lazy("catalog:home")
+
