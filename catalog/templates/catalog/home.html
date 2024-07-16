@@ -24,8 +24,10 @@
                             <div class="btn-group">
                                 <a class="btn btn-sm btn-outline-secondary"
                                    href="{% url 'catalog:product_info' pk=product.id %}">Подробнее о продукте</a>
+                                {% if perms.catalog.delete_product %}
                                 <a class="btn btn-sm btn-outline-secondary"
                                    href="{% url 'catalog:edit' pk=product.id %}">Редактировать карточку продукта</a>
+                                        {% endif %}
                             </div>
                         </div>
                         <div class="card-footer">

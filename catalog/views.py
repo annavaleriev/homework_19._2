@@ -10,11 +10,18 @@ from catalog.forms import ContactForm, ProductForm, VersionForm
 from catalog.models import Product, Version
 
 
-class ProductListView(ListView):
+class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     """Список продуктов"""
 
     model = Product
     template_name = "catalog/home.html"
+    permission_required = 'catalog.view_product'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.has_perm(self.permission_required):
+            messages.error(request, "У вас нет прав для просмотра продуктов. Проойдите авторизацию.")
+            return HttpResponseRedirect(reverse('user:login'))
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(
             self, *, object_list=None, **kwargs
@@ -102,6 +109,12 @@ class ProductMixin:
             messages.info(request, "Для добавления продукта необходимо авторизоваться.")
         return super().dispatch(request, *args, **kwargs)
 
+    def check_permissions(self):
+        if self.object and self.object.owner != self.request.user:
+            messages.error(self.request, "У вас нет прав на редактирование этого продукта.")
+            return False
+        return True
+
 
 class ProductCreateView(
     ProductMixin, LoginRequiredMixin, PermissionRequiredMixin, CreateView
@@ -123,9 +136,7 @@ class ProductUpdateView(
 
 
 class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    """"""
-
+    """ Класс для удаления продукта"""
     model = Product
     permission_required = "catalog.delete_product"
     success_url = reverse_lazy("catalog:home")
-
