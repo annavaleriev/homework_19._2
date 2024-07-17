@@ -54,13 +54,13 @@ class ProductForm(StyleFormMixin, ModelForm):  # потом вставить Sty
 
 class UpdateProductForm(ProductForm):
     disabled_fields_by_permissions = {
-        'is_published': "catalog.can_unpublish_product",
-        'category': "catalog.can_change_any_product_category",
-        'description': "catalog.can_change_any_product_description",
+        "is_published": "catalog.can_unpublish_product",
+        "category": "catalog.can_change_any_product_category",
+        "description": "catalog.can_change_any_product_description",
     }
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+        user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
         for field, permission in self.disabled_fields_by_permissions.items():
             self.fields[field].disabled = not user.has_perm(permission)

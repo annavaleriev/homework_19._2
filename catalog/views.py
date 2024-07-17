@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
 
@@ -8,17 +7,12 @@ from catalog.mixins import IsPublishedQuerysetMixin, ProductMixin
 from catalog.models import Product, Version
 
 
-class ProductListView(
-    LoginRequiredMixin,
-    PermissionRequiredMixin,
-    IsPublishedQuerysetMixin,
-    ListView
-):
+class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, IsPublishedQuerysetMixin, ListView):
     """Список продуктов"""
 
     model = Product
     template_name = "catalog/home.html"
-    permission_required = 'catalog.view_product'
+    permission_required = "catalog.view_product"
 
     # def dispatch(self, request, *args, **kwargs):
     #     if not request.user.has_perm(self.permission_required):
@@ -27,7 +21,7 @@ class ProductListView(
     #     return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(
-            self, *, object_list=None, **kwargs
+        self, *, object_list=None, **kwargs
     ):  # переопределяем метод get_context_data для передачи дополнительных данных в контекст
         context = super().get_context_data(
             object_list=None, **kwargs
@@ -45,7 +39,8 @@ class ProductListView(
 
 
 class ContactsTemplateView(FormView):
-    """ Класс для отображения страницы контактов и отправки формы"""
+    """Класс для отображения страницы контактов и отправки формы"""
+
     template_name = "catalog/contacts.html"
     form_class = ContactForm
     success_url = reverse_lazy("catalog:home")
@@ -63,13 +58,9 @@ class ContactsTemplateView(FormView):
         return context  # возвращаем контекст
 
 
-class ProductDetailView(
-    LoginRequiredMixin,
-    PermissionRequiredMixin,
-    IsPublishedQuerysetMixin,
-    DetailView
-):
+class ProductDetailView(LoginRequiredMixin, PermissionRequiredMixin, IsPublishedQuerysetMixin, DetailView):
     """Информация о продукте"""
+
     model = Product
     template_name = "catalog/product_info.html"
     permission_required = "catalog.view_product"
@@ -78,7 +69,8 @@ class ProductDetailView(
 class ProductCreateView(
     ProductMixin, LoginRequiredMixin, PermissionRequiredMixin, CreateView
 ):  # создаем класс BlogCreateView, который наследуется от CreateView
-    """ Класс для создания нового продукта"""
+    """Класс для создания нового продукта"""
+
     permission_required = "catalog.add_product"
     success_url = reverse_lazy("catalog:home")  # указываем URL, на который будет перенаправлен пользователь после
 
@@ -86,18 +78,20 @@ class ProductCreateView(
 class ProductUpdateView(
     ProductMixin, LoginRequiredMixin, PermissionRequiredMixin, IsPublishedQuerysetMixin, UpdateView
 ):  # создаем класс BlogUpdateView, который наследуется от UpdateView
-    """ Класс для изменения продукта"""
+    """Класс для изменения продукта"""
+
     permission_required = "catalog.change_product"
     form_class = UpdateProductForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs.update({'user': self.request.user})
+        kwargs.update({"user": self.request.user})
         return kwargs
 
     def get_success_url(self):  # переопределяем метод get_success_url
         return reverse("catalog:product_info", kwargs={"pk": self.get_object().pk})
         # возвращаем URL, на который будет перенаправлен
+
 
 # class ProductDeleteView(
 #     LoginRequiredMixin,

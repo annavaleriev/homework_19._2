@@ -17,6 +17,7 @@ from user.models import User
 
 class UserCreateView(CreateView):
     """Регистрация пользователя"""
+
     model = User
     form_class = RegisterForm
     success_url = reverse_lazy("user:login")
@@ -50,6 +51,7 @@ def email_verification(request, token):
 
 class PasswordResetView(FormView):
     """Восстановление пароля"""
+
     form_class = PasswordResetForm
     template_name = "user/password_reset.html"  # нет еще этого шаблона
     success_url = reverse_lazy("user:login")
@@ -81,6 +83,7 @@ class PasswordResetView(FormView):
 
 class UserChangeView(UpdateView):
     """Изменение данных пользователя"""
+
     model = User
     form_class = ChangeUserForm
     success_url = reverse_lazy("catalog:home")

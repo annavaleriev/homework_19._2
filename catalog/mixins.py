@@ -9,7 +9,8 @@ from catalog.models import Product, Version
 
 
 class ProductMixin:
-    """ Класс для добавления версий продукта"""
+    """Класс для добавления версий продукта"""
+
     model = Product
     form_class = ProductForm  # указываем форму, которая будет использоваться
     template_name = "catalog/product_form.html"
