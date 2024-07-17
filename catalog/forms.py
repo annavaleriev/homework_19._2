@@ -29,7 +29,7 @@ class ProductForm(StyleFormMixin, ModelForm):  # потом вставить Sty
 
     class Meta:
         model = Product
-        fields = ["title", "description", "category", "image", "price"]
+        fields = ["title", "description", "category", "image", "price", "is_published"]
 
     @staticmethod
     def check_wrong_words(field_value):
@@ -50,6 +50,20 @@ class ProductForm(StyleFormMixin, ModelForm):  # потом вставить Sty
         description = self.cleaned_data["description"]
         self.check_wrong_words(description)
         return description
+
+
+class UpdateProductForm(ProductForm):
+    disabled_fields_by_permissions = {
+        'is_published': "catalog.can_unpublish_product",
+        'category': "catalog.can_change_any_product_category",
+        'description': "catalog.can_change_any_product_description",
+    }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        for field, permission in self.disabled_fields_by_permissions.items():
+            self.fields[field].disabled = not user.has_perm(permission)
 
 
 class VersionForm(StyleFormMixin, ModelForm):

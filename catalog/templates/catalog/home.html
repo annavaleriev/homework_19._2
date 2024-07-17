@@ -5,9 +5,11 @@
 {% block content %}
 
     <div class="container">
-        <div class="col text-end">
-            <a class="btn btn-warning" href="{% url 'catalog:create' %}">Добавить продукт</a>
-        </div>
+        {% if perms.catalog.add_product %}
+            <div class="col text-end">
+                <a class="btn btn-warning" href="{% url 'catalog:create' %}">Добавить продукт</a>
+            </div>
+        {% endif %}
         <div class="row text-center">
             {% for product in object_list %}
                 <div class="col-3 my-3">
@@ -24,10 +26,10 @@
                             <div class="btn-group">
                                 <a class="btn btn-sm btn-outline-secondary"
                                    href="{% url 'catalog:product_info' pk=product.id %}">Подробнее о продукте</a>
-                                {% if perms.catalog.delete_product %}
-                                <a class="btn btn-sm btn-outline-secondary"
-                                   href="{% url 'catalog:edit' pk=product.id %}">Редактировать карточку продукта</a>
-                                        {% endif %}
+                                {% if perms.catalog.change_product %}
+                                    <a class="btn btn-sm btn-outline-secondary"
+                                       href="{% url 'catalog:edit' pk=product.id %}">Редактировать карточку продукта</a>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="card-footer">

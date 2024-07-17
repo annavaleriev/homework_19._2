@@ -27,7 +27,7 @@ class Product(models.Model):
     created_at = models.DateField(auto_now_add=True, verbose_name="Дата создания (записи в БД)")
     updated_at = models.DateField(auto_now=True, verbose_name="Дата последнего изменения (записи в БД)")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Владелец")
-    is_published = models.BooleanField(default=False)
+    is_published = models.BooleanField(default=False, verbose_name="Опубликовано")
 
     def __str__(self):
         return f"{self.title} {self.category} {self.price}"
@@ -39,6 +39,7 @@ class Product(models.Model):
         permissions = [
             ("can_unpublish_product", "Отменять публикацию продукта"),
             ("can_change_any_product_description", "Менять описание любого продукта"),
+            ("can_change_any_product_category", "Менять категорию любого продукта"),
         ]
 
     @property

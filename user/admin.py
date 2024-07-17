@@ -8,3 +8,4 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ("email", "phone", "country")
     search_fields = ("email", "phone")
     ordering = ("email",)
+    filter_horizontal = ("groups", "user_permissions")

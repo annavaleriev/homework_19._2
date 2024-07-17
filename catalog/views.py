@@ -1,27 +1,30 @@
-from django import forms
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.db import transaction
-from django.http import HttpResponseRedirect
-from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView, DeleteView
 
-from catalog.forms import ContactForm, ProductForm, VersionForm
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
+
+from catalog.forms import ContactForm, UpdateProductForm
+from catalog.mixins import IsPublishedQuerysetMixin, ProductMixin
 from catalog.models import Product, Version
 
 
-class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class ProductListView(
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    IsPublishedQuerysetMixin,
+    ListView
+):
     """Список продуктов"""
 
     model = Product
     template_name = "catalog/home.html"
     permission_required = 'catalog.view_product'
 
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.has_perm(self.permission_required):
-            messages.error(request, "У вас нет прав для просмотра продуктов. Проойдите авторизацию.")
-            return HttpResponseRedirect(reverse('user:login'))
-        return super().dispatch(request, *args, **kwargs)
+    # def dispatch(self, request, *args, **kwargs):
+    #     if not request.user.has_perm(self.permission_required):
+    #         messages.error(request, "У вас нет прав для просмотра продуктов. Пройдите авторизацию.")
+    #         return HttpResponseRedirect(reverse('user:login'))
+    #     return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(
             self, *, object_list=None, **kwargs
@@ -60,60 +63,16 @@ class ContactsTemplateView(FormView):
         return context  # возвращаем контекст
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    IsPublishedQuerysetMixin,
+    DetailView
+):
     """Информация о продукте"""
     model = Product
     template_name = "catalog/product_info.html"
-
-
-class ProductMixin:
-    """ Класс для добавления версий продукта"""
-    model = Product
-    form_class = ProductForm  # указываем форму, которая будет использоваться
-    template_name = "catalog/product_form.html"
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        VersionFormSet = forms.inlineformset_factory(self.model, Version, form=VersionForm, extra=1)
-        if self.request.method == "POST":
-            formset = VersionFormSet(self.request.POST, instance=self.object)
-        else:
-            formset = VersionFormSet(instance=self.object)
-        context_data["formset"] = formset
-        return context_data
-
-    def form_valid(self, form):
-        context_data = self.get_context_data()
-        formset = context_data["formset"]
-
-        with transaction.atomic():
-            if form.is_valid() and formset.is_valid():
-                self.object = form.save(commit=False)
-                self.object.owner = self.request.user  # Привязка продукта к авторизованному пользователю
-                self.object.save()
-                formset.instance = self.object
-                formset.save()
-            else:
-                for error in formset.errors:
-                    messages.add_message(self.request, messages.ERROR, str(error))
-                if self.object:
-                    success_url = reverse("catalog:edit", kwargs={"pk": self.object.pk})
-                else:
-                    success_url = reverse("catalog:create")
-                return HttpResponseRedirect(success_url)
-
-        return super().form_valid(form)
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            messages.info(request, "Для добавления продукта необходимо авторизоваться.")
-        return super().dispatch(request, *args, **kwargs)
-
-    def check_permissions(self):
-        if self.object and self.object.owner != self.request.user:
-            messages.error(self.request, "У вас нет прав на редактирование этого продукта.")
-            return False
-        return True
+    permission_required = "catalog.view_product"
 
 
 class ProductCreateView(
@@ -125,18 +84,28 @@ class ProductCreateView(
 
 
 class ProductUpdateView(
-    ProductMixin, LoginRequiredMixin, PermissionRequiredMixin, UpdateView
+    ProductMixin, LoginRequiredMixin, PermissionRequiredMixin, IsPublishedQuerysetMixin, UpdateView
 ):  # создаем класс BlogUpdateView, который наследуется от UpdateView
     """ Класс для изменения продукта"""
     permission_required = "catalog.change_product"
+    form_class = UpdateProductForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
     def get_success_url(self):  # переопределяем метод get_success_url
         return reverse("catalog:product_info", kwargs={"pk": self.get_object().pk})
         # возвращаем URL, на который будет перенаправлен
 
-
-class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    """ Класс для удаления продукта"""
-    model = Product
-    permission_required = "catalog.delete_product"
-    success_url = reverse_lazy("catalog:home")
+# class ProductDeleteView(
+#     LoginRequiredMixin,
+#     PermissionRequiredMixin,
+#     IsPublishedQuerysetMixin,
+#     DeleteView
+# ):
+#     """ Класс для удаления продукта"""
+#     model = Product
+#     permission_required = "catalog.delete_product"
+#     success_url = reverse_lazy("catalog:home")
