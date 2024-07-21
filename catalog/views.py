@@ -1,5 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
 
 from catalog.forms import ContactForm, UpdateProductForm
@@ -64,6 +66,10 @@ class ProductDetailView(LoginRequiredMixin, PermissionRequiredMixin, IsPublished
     model = Product
     template_name = "catalog/product_info.html"
     permission_required = "catalog.view_product"
+
+    @method_decorator(cache_page(60 * 15)) # кэширование страницы на 15 минут
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
 
 class ProductCreateView(

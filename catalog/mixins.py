@@ -63,3 +63,7 @@ class IsPublishedQuerysetMixin:
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(is_published=True)
+
+
+class CacheMixin:
+    pass

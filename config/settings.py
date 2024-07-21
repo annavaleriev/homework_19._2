@@ -150,3 +150,14 @@ LOGIN_REDIRECT_URL = "/"  # редирект после успешного вх�
 LOGOUT_REDIRECT_URL = "/"
 
 LOGIN_URL = "/user/login/"
+
+CACHE_ENABLED = os.getenv("CACHE_ENABLED") == "True"
+
+
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": os.getenv("CACHE_LOCATION"),
+        }
+    }
