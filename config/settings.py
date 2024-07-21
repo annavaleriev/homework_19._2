@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-8id9f8#*eks^c-uhdq^(jy!i7un(qlt#&v0e&si#)a=3qi=59x"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG") == "True"
 
 ALLOWED_HOSTS = ["*"]
 
@@ -161,3 +161,5 @@ if CACHE_ENABLED:
             "LOCATION": os.getenv("CACHE_LOCATION"),
         }
     }
+
+CACHE_15_MINUTES = 60 * 15

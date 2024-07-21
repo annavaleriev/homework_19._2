@@ -47,11 +47,6 @@ class ProductMixin:
 
         return super().form_valid(form)
 
-    # def dispatch(self, request, *args, **kwargs):
-    #     if not request.user.is_authenticated:
-    #         messages.info(request, "Для добавления продукта необходимо авторизоваться.")
-    #     return super().dispatch(request, *args, **kwargs)
-
     def check_permissions(self):
         if self.object and self.object.owner != self.request.user:
             messages.error(self.request, "У вас нет прав на редактирование этого продукта.")
@@ -63,7 +58,3 @@ class IsPublishedQuerysetMixin:
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(is_published=True)
-
-
-class CacheMixin:
-    pass

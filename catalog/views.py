@@ -1,13 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
 
 from catalog.forms import ContactForm, UpdateProductForm
 from catalog.mixins import IsPublishedQuerysetMixin, ProductMixin
-from catalog.models import Product, Version, Category
+from catalog.models import Category, Product, Version
 
 
 class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, IsPublishedQuerysetMixin, ListView):
@@ -16,12 +13,6 @@ class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, IsPublishedQu
     model = Product
     template_name = "catalog/home.html"
     permission_required = "catalog.view_product"
-
-    # def dispatch(self, request, *args, **kwargs):
-    #     if not request.user.has_perm(self.permission_required):
-    #         messages.error(request, "У вас нет прав для просмотра продуктов. Пройдите авторизацию.")
-    #         return HttpResponseRedirect(reverse('user:login'))
-    #     return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(
         self, *, object_list=None, **kwargs
@@ -34,7 +25,6 @@ class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, IsPublishedQu
             "Отличный магазинчик"  # добавляем в контекст новый ключ text со значением 'Отличный магазинчик'
         )
         for product in context["object_list"]:  # перебираем все объекты из контекста
-            # product.versions = Version.objects.filter(product=product).order_by('version_number')
             product.all_versions = Version.objects.filter(product=product).order_by("version_number")
             # добавляем в объект продукта все версии
 
@@ -68,10 +58,6 @@ class ProductDetailView(LoginRequiredMixin, PermissionRequiredMixin, IsPublished
     template_name = "catalog/product_info.html"
     permission_required = "catalog.view_product"
 
-    @method_decorator(cache_page(60 * 15)) # кэширование страницы на 15 минут
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
 
 class ProductCreateView(
     ProductMixin, LoginRequiredMixin, PermissionRequiredMixin, CreateView
@@ -100,19 +86,7 @@ class ProductUpdateView(
         # возвращаем URL, на который будет перенаправлен
 
 
-# class ProductDeleteView(
-#     LoginRequiredMixin,
-#     PermissionRequiredMixin,
-#     IsPublishedQuerysetMixin,
-#     DeleteView
-# ):
-#     """ Класс для удаления продукта"""
-#     model = Product
-#     permission_required = "catalog.delete_product"
-#     success_url = reverse_lazy("catalog:home")
-
-
-def category_list(request):
-    """Список категорий"""
-    categories = Category.objects.all()
-    return render(request, "catalog/category_list.html", {"categories": categories})
+# def category_list(request):
+#     """Список категорий"""
+#     categories = Category.objects.all()
+#     return render(request, "catalog/category_list.html", {"categories": categories})
