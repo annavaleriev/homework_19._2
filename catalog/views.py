@@ -4,7 +4,7 @@ from django.views.generic import CreateView, DetailView, FormView, ListView, Upd
 
 from catalog.forms import ContactForm, UpdateProductForm
 from catalog.mixins import IsPublishedQuerysetMixin, ProductMixin
-from catalog.models import Category, Product, Version
+from catalog.models import Product, Version
 
 
 class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, IsPublishedQuerysetMixin, ListView):
@@ -84,9 +84,3 @@ class ProductUpdateView(
     def get_success_url(self):  # переопределяем метод get_success_url
         return reverse("catalog:product_info", kwargs={"pk": self.get_object().pk})
         # возвращаем URL, на который будет перенаправлен
-
-
-# def category_list(request):
-#     """Список категорий"""
-#     categories = Category.objects.all()
-#     return render(request, "catalog/category_list.html", {"categories": categories})
