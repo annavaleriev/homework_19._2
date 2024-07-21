@@ -13,6 +13,7 @@ def get_categories():
         cache.set(cache_key, categories)
     return categories
 
+
 def get_products():
     """Возвращает список продуктов"""
     cache_key = 'all_products'

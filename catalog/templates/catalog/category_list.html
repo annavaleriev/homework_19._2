@@ -1,0 +1,16 @@
+{% extends 'includes/base.html' %}
+
+<head>
+    <title>Список категорий</title>
+</head>
+<body>
+<h1>Список категорий</h1>
+<ul>
+    {% for category in categories %}
+        <li>{{ category.name }}</li>
+    {% empty %}
+        <li>Нет категорий.</li>
+    {% endfor %}
+</ul>
+</body>
+</html>

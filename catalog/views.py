@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -6,7 +7,7 @@ from django.views.generic import CreateView, DetailView, FormView, ListView, Upd
 
 from catalog.forms import ContactForm, UpdateProductForm
 from catalog.mixins import IsPublishedQuerysetMixin, ProductMixin
-from catalog.models import Product, Version
+from catalog.models import Product, Version, Category
 
 
 class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, IsPublishedQuerysetMixin, ListView):
@@ -109,3 +110,9 @@ class ProductUpdateView(
 #     model = Product
 #     permission_required = "catalog.delete_product"
 #     success_url = reverse_lazy("catalog:home")
+
+
+def category_list(request):
+    """Список категорий"""
+    categories = Category.objects.all()
+    return render(request, "catalog/category_list.html", {"categories": categories})
